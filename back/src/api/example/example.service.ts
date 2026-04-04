@@ -1,3 +1,4 @@
+import { AppError } from '../../errors/app-error.js';
 import { exampleRepository } from './example.repository.js';
 import type { ExampleRecord } from './example.repository.js';
 
@@ -14,8 +15,12 @@ export const exampleService = {
     return exampleRepository.listPaged(page, limit);
   },
 
-  async getById(id: string): Promise<ExampleRecord | undefined> {
-    return exampleRepository.findById(id);
+  async getById(id: string): Promise<ExampleRecord> {
+    const row = await exampleRepository.findById(id);
+    if (!row) {
+      throw new AppError(404, 'not_found');
+    }
+    return row;
   },
 
   async create(title: string): Promise<ExampleRecord> {

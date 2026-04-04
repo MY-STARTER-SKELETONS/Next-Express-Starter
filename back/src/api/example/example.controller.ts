@@ -29,12 +29,7 @@ export const exampleController = {
       });
       return;
     }
-    const row = await exampleService.getById(parsed.data.id);
-    if (!row) {
-      res.status(404).json({ error: 'not_found' });
-      return;
-    }
-    res.json(row);
+    res.json(await exampleService.getById(parsed.data.id));
   },
 
   async create(req: Request, res: Response): Promise<void> {

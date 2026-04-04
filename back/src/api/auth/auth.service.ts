@@ -1,25 +1,23 @@
+import { AppError } from '../../errors/app-error.js';
 import { authRepository } from './auth.repository.js';
 
-export type LoginResult =
-  | { ok: true; userId: string }
-  | { ok: false; reason: 'invalid_credentials' };
-
 export const authService = {
-  async login(email: string, password: string): Promise<LoginResult> {
+  async login(email: string, password: string): Promise<{ userId: string }> {
     const user = await authRepository.findByEmail(email);
     if (!user || user.passwordPlain !== password) {
-      return { ok: false, reason: 'invalid_credentials' };
+      throw new AppError(401, 'invalid_credentials');
     }
-    return { ok: true, userId: user.id };
+    return { userId: user.id };
   },
 
-  async getSessionUserId(
-    sessionId: string | undefined,
-  ): Promise<string | undefined> {
+  async requireSessionUserId(sessionId: string | undefined): Promise<string> {
     if (!sessionId) {
-      return undefined;
+      throw new AppError(401, 'unauthorized');
     }
     const user = await authRepository.findById(sessionId);
-    return user?.id;
+    if (!user) {
+      throw new AppError(401, 'unauthorized');
+    }
+    return user.id;
   },
 };

@@ -1,14 +1,9 @@
 import { Router } from 'express';
+import { wrapAsync } from '../../middleware/wrap-async.js';
 import { exampleController } from './example.controller.js';
 
 export const exampleRouter = Router();
 
-exampleRouter.get('/', (req, res) => {
-  exampleController.list(req, res);
-});
-exampleRouter.get('/:id', (req, res) => {
-  exampleController.getById(req, res);
-});
-exampleRouter.post('/', (req, res) => {
-  exampleController.create(req, res);
-});
+exampleRouter.get('/', wrapAsync(exampleController.list));
+exampleRouter.get('/:id', wrapAsync(exampleController.getById));
+exampleRouter.post('/', wrapAsync(exampleController.create));

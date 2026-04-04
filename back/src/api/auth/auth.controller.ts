@@ -14,25 +14,17 @@ export const authController = {
       return;
     }
 
-    const result = await authService.login(
+    const { userId } = await authService.login(
       parsed.data.email,
       parsed.data.password,
     );
-    if (!result.ok) {
-      res.status(401).json({ error: result.reason });
-      return;
-    }
 
-    res.cookie('sid', result.userId, defaultCookieOptions);
-    res.json({ userId: result.userId });
+    res.cookie('sid', userId, defaultCookieOptions);
+    res.json({ userId });
   },
 
   async me(req: Request, res: Response): Promise<void> {
-    const userId = await authService.getSessionUserId(req.cookies?.sid);
-    if (!userId) {
-      res.status(401).json({ error: 'unauthorized' });
-      return;
-    }
+    const userId = await authService.requireSessionUserId(req.cookies?.sid);
     res.json({ userId });
   },
 };
