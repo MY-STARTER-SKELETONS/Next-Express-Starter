@@ -1,0 +1,17 @@
+{
+  "name": "next-express-starter",
+  "private": true,
+  "workspaces": [
+    "back",
+    "front"
+  ],
+  "scripts": {
+    "postinstall": "npm run prisma:generate -w back",
+    "dev": "concurrently -k -n back,front -c blue,cyan \"npm run dev -w back\" \"npm run dev -w web\"",
+    "build": "npm run build -w web",
+    "lint": "npm run lint -w web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
