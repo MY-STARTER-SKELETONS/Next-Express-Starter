@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchWelcomeHealth } from "../api/welcome-api";
+import { fetchWelcomeHealth } from "../api/welcomeApi";
 
 type HealthState = "loading" | "ok" | "error";
 

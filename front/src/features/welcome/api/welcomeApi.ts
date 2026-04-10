@@ -1,7 +1,7 @@
 import {
   WELCOME_API_BASE,
   WELCOME_HEALTH_PATH,
-} from "../constants/welcome.constants";
+} from "../constants/welcomeConstants";
 
 /** 백엔드 헬스체크 (서버 컴포넌트·클라이언트 훅 모두에서 호출 가능) */
 export async function fetchWelcomeHealth(): Promise<{ ok: boolean }> {

@@ -1,7 +1,7 @@
 "use client";
 
-import { WELCOME_FEATURE_KEY } from "../constants/welcome.constants";
-import { useWelcomeHealth } from "../hooks/use-welcome-health";
+import { WELCOME_FEATURE_KEY } from "../constants/welcomeConstants";
+import { useWelcomeHealth } from "../hooks/useWelcomeHealth";
 
 export function WelcomeStatus() {
   const state = useWelcomeHealth();

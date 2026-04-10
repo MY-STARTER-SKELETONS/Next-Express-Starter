@@ -14,7 +14,7 @@
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
-    // and npm install -D @types/node
+    // and pnpm add -D @types/node --filter back (from repo root)
 
     // Other Outputs
     "sourceMap": true,

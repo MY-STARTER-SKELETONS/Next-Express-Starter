@@ -2,11 +2,15 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --experimental-next-config-strip-types",
+    "build": "next build --experimental-next-config-strip-types",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "node --experimental-strip-types ./node_modules/eslint/bin/eslint.js ."
   },
   "dependencies": {
     "next": "16.2.2",
