@@ -11,7 +11,7 @@ Next.js(프론트)와 Express + Prisma(백엔드)를 한 저장소에서 시작�
 
 백엔드는 `routes → controller → service → repository` 레이어로 나뉘어 있습니다.
 
-저장소 루트와 `front/`, `back/` 패키지는 모두 **`package.json`의 `"type": "module"`** 로 **ESM**(`import` / `export`)을 씁니다.
+`front/`, `back/` 패키지는 모두 **`package.json`의 `"type": "module"`** 로 **ESM**(`import` / `export`)을 씁니다.
 
 ## 요구 사항
 
@@ -21,16 +21,24 @@ Next.js(프론트)와 Express + Prisma(백엔드)를 한 저장소에서 시작�
 
 ## 처음 설정
 
-1. **저장소 루트에서 의존성 설치**
+1. **패키지별 의존성 설치**
 
    ```bash
    corepack enable
+   cd back
+   pnpm install
+   cd ../front
    pnpm install
    ```
 
-   워크스페이스는 `pnpm-workspace.yaml`로 정의합니다. **`pnpm-lock.yaml`은 루트에만** 두는 것을 권장합니다.  
-   루트 `postinstall`에서 `back`의 Prisma 클라이언트 생성(`prisma generate`)이 실행됩니다.  
+   의존성과 lockfile은 `back/`, `front/`에서 각각 관리합니다. 저장소 루트에는 `package.json`이나 `pnpm-lock.yaml`을 두지 않습니다.  
+   백엔드 설치 후 Prisma 클라이언트를 생성합니다.  
    클라이언트 출력은 `back/src/generated/`이며 Git에는 포함하지 않습니다.
+
+   ```bash
+   cd ../back
+   pnpm run prisma:generate
+   ```
 
 2. **백엔드 환경 변수**
 
@@ -39,46 +47,41 @@ Next.js(프론트)와 Express + Prisma(백엔드)를 한 저장소에서 시작�
 3. **DB 스키마 적용**
 
    ```bash
-   pnpm --filter back run prisma:migrate
+   cd back
+   pnpm run prisma:migrate
    ```
 
-   (또는 `cd back` 후 `pnpm exec prisma migrate dev`)
+   (또는 `pnpm exec prisma migrate dev`)
 
 4. **개발 서버 실행**
 
    ```bash
+   cd back
+   pnpm run dev
+   # 새 터미널
+   cd front
    pnpm run dev
    ```
 
    - API: `http://localhost:<PORT>` (기본값은 `back/.env`의 `PORT`, 예: 4000)
    - 웹: `http://localhost:3000` (Next 기본 포트)
 
-두 프로세스는 한 터미널에서 함께 뜨며, Ctrl+C 한 번으로 둘 다 종료됩니다(`concurrently -k`).
-
-## 스크립트 (루트)
+## 스크립트
 
 | 명령 | 설명 |
 |------|------|
-| `pnpm run dev` | 백엔드 + 프론트 동시 개발 모드 |
-| `pnpm run build` | 프론트 프로덕션 빌드 |
-| `pnpm run lint` | 프론트 ESLint |
-| `pnpm --filter back run prisma:generate` | Prisma 클라이언트만 재생성 |
-| `pnpm --filter back run prisma:migrate` | 마이그레이션(백엔드) |
-| `pnpm --filter back run prisma:studio` | Prisma Studio |
-
-워크스페이스 패키지 이름은 백엔드 `back`, 프론트 `web`입니다.
-
-## 워크스페이스만 따로 실행
-
-```bash
-pnpm --filter back run dev
-pnpm --filter web run dev
-```
+| `cd back && pnpm run dev` | 백엔드 개발 서버 |
+| `cd back && pnpm run prisma:generate` | Prisma 클라이언트 재생성 |
+| `cd back && pnpm run prisma:migrate` | 마이그레이션 |
+| `cd back && pnpm run prisma:studio` | Prisma Studio |
+| `cd front && pnpm run dev` | 프론트 개발 서버 |
+| `cd front && pnpm run build` | 프론트 프로덕션 빌드 |
+| `cd front && pnpm run lint` | 프론트 ESLint |
 
 ## Prisma 참고
 
 - 스키마: `back/prisma/schema.prisma`
-- `prisma generate` 없이 TypeScript만 돌리면 `back/src/generated/prisma`가 없어 오류가 날 수 있습니다. 루트에서 `pnpm install`을 하거나 위 `prisma:generate`로 생성합니다.
+- `prisma generate` 없이 TypeScript만 돌리면 `back/src/generated/prisma`가 없어 오류가 날 수 있습니다. `back`에서 `pnpm run prisma:generate`로 생성합니다.
 - 시드: `back`에 `prisma.seed`가 설정되어 있으면 `cd back && pnpm exec prisma db seed`로 실행할 수 있습니다.
 
 ## 라이선스

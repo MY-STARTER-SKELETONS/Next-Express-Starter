@@ -77,6 +77,6 @@ front/
 
 ---
 
-실행·스크립트는 저장소 루트 `README.md`를 참고합니다.
+실행·스크립트는 저장소 루트 `README.md`와 이 패키지의 `package.json`을 참고합니다.
 
 환경 변수는 `.env.example`을 복사해 `.env.local`을 만들고 값을 맞춥니다(`NEXT_PUBLIC_*`만 브라우저에 노출됩니다).
